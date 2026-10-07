@@ -1,0 +1,8 @@
+@import './tokens.css';
+* { box-sizing: border-box; border-width: 0; border-style: solid; border-color: var(--ve-line); }
+html { background: var(--ve-bg); color: var(--ve-ink); color-scheme: dark; }
+body { margin: 0; font-family: var(--ve-font-ui); font-size: 14px; -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; }
+button { color: inherit; }
+::selection { background: #ddd; color: #090909; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

@@ -1,0 +1,37 @@
+{
+  "name": "vue-explorer",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.11.0"
+  },
+  "scripts": {
+    "dev": "nuxt dev --host 127.0.0.1 --port 3047",
+    "build": "nuxt build",
+    "typecheck": "nuxt typecheck",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^4.4.5",
+    "vue": "^3.5.34"
+  },
+  "devDependencies": {
+    "@nuxt/kit": "^4.4.5",
+    "@types/node": "^24.0.0",
+    "@unocss/nuxt": "^66.6.8",
+    "@vue-flow/core": "1.48.2",
+    "@vue/compiler-dom": "^3.5.34",
+    "devframe": "1.2.3",
+    "elkjs": "0.11.0",
+    "magic-string": "^0.30.21",
+    "nitropack": "2.13.4",
+    "shiki": "^4.5.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3",
+    "unocss": "^66.6.8",
+    "valibot": "^1.5.0",
+    "vue-tsc": "^3.1.0"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

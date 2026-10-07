@@ -1,0 +1,11 @@
+:root, :host {
+  --ve-bg: #090909;
+  --ve-surface: #101010;
+  --ve-raised: #191919;
+  --ve-ink: #ededed;
+  --ve-muted: #a1a1a1;
+  --ve-line: #292929;
+  --ve-accent: #ffffff;
+  --ve-font-ui: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ve-font-code: 'Geist Mono', 'SFMono-Regular', Consolas, monospace;
+}
