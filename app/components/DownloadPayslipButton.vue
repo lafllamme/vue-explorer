@@ -8,11 +8,23 @@ async function downloadPayslip() {
     const blob = await payrollApi.download()
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
-    link.href = url; link.download = 'demo-payslip.txt'; link.click()
+    link.href = url
+    link.download = 'demo-payslip.txt'
+    link.click()
     URL.revokeObjectURL(url)
     message.value = 'Downloaded'
-  } catch { message.value = 'Download failed' }
-  finally { pending.value = false }
+  } catch {
+    message.value = 'Download failed'
+  } finally {
+    pending.value = false
+  }
 }
 </script>
-<template><div><button class="ve-button" :disabled="pending" @click="downloadPayslip">{{ pending ? 'Downloading…' : 'Download payslip' }} ↗</button><span v-if="message" role="status" class="block ve-code text-[10px] mt-2">{{ message }}</span></div></template>
+<template>
+  <div>
+    <button class="ve-button" :disabled="pending" @click="downloadPayslip">
+      {{ pending ? 'Downloading…' : 'Download payslip' }} ↗
+    </button>
+    <span v-if="message" role="status" class="block ve-code text-[10px] mt-2">{{ message }}</span>
+  </div>
+</template>

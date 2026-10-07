@@ -1,10 +1,18 @@
-import { computed, onMounted, onUnmounted, ref, shallowRef, type ComponentInternalInstance } from 'vue'
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  shallowRef,
+  type ComponentInternalInstance,
+} from 'vue'
 
 export type ComponentEntry = { name: string; file: string; props: Record<string, string> }
 type VueElement = Element & { __vueParentComponent?: ComponentInternalInstance }
 export function useInspector() {
   const picking = ref(false)
   const opened = ref(false)
+  const labOpen = ref(false)
   const selected = shallowRef<Element | null>(null)
   const hovered = shallowRef<Element | null>(null)
   const box = shallowRef<DOMRect | null>(null)
@@ -24,6 +32,7 @@ export function useInspector() {
     return value === undefined ? 'undefined' : '[object]'
   }
   const inspect = (el: Element) => {
+    labOpen.value = false
     previousFocus = document.activeElement as HTMLElement | null
     selected.value = el
     const tagged = el.closest('[data-ve-file]') as HTMLElement | null
@@ -32,11 +41,19 @@ export function useInspector() {
     const entries: ComponentEntry[] = []
     let instance = (el as VueElement).__vueParentComponent
     let parent: Element | null = el
-    while (!instance && parent) { instance = (parent as VueElement).__vueParentComponent; parent = parent.parentElement }
+    while (!instance && parent) {
+      instance = (parent as VueElement).__vueParentComponent
+      parent = parent.parentElement
+    }
     while (instance) {
       const type = instance.type as { name?: string; __name?: string; __file?: string }
-      entries.push({ name: type.name || type.__name || 'Anonymous', file: type.__file || '',
-        props: Object.fromEntries(Object.entries(instance.props).map(([k, v]) => [k, safeProp(k, v)])) })
+      entries.push({
+        name: type.name || type.__name || 'Anonymous',
+        file: type.__file || '',
+        props: Object.fromEntries(
+          Object.entries(instance.props).map(([k, v]) => [k, safeProp(k, v)]),
+        ),
+      })
       instance = instance.parent || undefined
     }
     chain.value = entries
@@ -45,7 +62,12 @@ export function useInspector() {
     hovered.value = null
     box.value = null
   }
-  const target = (event: Event) => event.composedPath().some(el => el instanceof Element && el.tagName === 'VUE-EXPLORER') ? null : event.target instanceof Element ? event.target : null
+  const target = (event: Event) =>
+    event.composedPath().some((el) => el instanceof Element && el.tagName === 'VUE-EXPLORER')
+      ? null
+      : event.target instanceof Element
+        ? event.target
+        : null
   const move = (event: MouseEvent) => {
     if (!picking.value && !held) return
     hovered.value = target(event)
@@ -55,16 +77,43 @@ export function useInspector() {
     if (!(picking.value || event.altKey)) return
     const el = target(event)
     if (!el) return
-    event.preventDefault(); event.stopImmediatePropagation(); inspect(el)
+    event.preventDefault()
+    event.stopImmediatePropagation()
+    inspect(el)
   }
-  const close = () => { opened.value = false; previousFocus?.focus() }
+  const close = () => {
+    opened.value = false
+    previousFocus?.focus()
+  }
   const keydown = (event: KeyboardEvent) => {
     if (event.key === 'Alt') held = true
-    if (event.key === 'Escape') { picking.value = false; held = false; box.value = null; hovered.value = null; close() }
+    if (event.key === 'Escape') {
+      picking.value = false
+      held = false
+      box.value = null
+      hovered.value = null
+      close()
+    }
   }
-  const clear = () => { held = false; hovered.value = null; box.value = null }
-  const keyup = (event: KeyboardEvent) => { if (event.key === 'Alt') clear() }
-  const start = () => { picking.value = !picking.value; if (!picking.value) clear() }
+  const clear = () => {
+    held = false
+    hovered.value = null
+    box.value = null
+  }
+  const keyup = (event: KeyboardEvent) => {
+    if (event.key === 'Alt') clear()
+  }
+  const start = () => {
+    picking.value = !picking.value
+    if (!picking.value) clear()
+  }
+  const preview = (event: Event) => {
+    const element = (event as CustomEvent<{ element?: Element }>).detail?.element
+    if (element instanceof Element && element.isConnected) {
+      inspect(element)
+      labOpen.value = true
+    }
+  }
   onMounted(() => {
     window.addEventListener('mousemove', move, { passive: true })
     window.addEventListener('click', click, true)
@@ -75,6 +124,7 @@ export function useInspector() {
     window.addEventListener('scroll', clear, true)
     window.addEventListener('resize', clear)
     window.addEventListener('vue-explorer:pick', start)
+    window.addEventListener('vue-explorer:preview', preview)
   })
   onUnmounted(() => {
     window.removeEventListener('mousemove', move)
@@ -86,6 +136,19 @@ export function useInspector() {
     window.removeEventListener('scroll', clear, true)
     window.removeEventListener('resize', clear)
     window.removeEventListener('vue-explorer:pick', start)
+    window.removeEventListener('vue-explorer:preview', preview)
   })
-  return { picking, opened, selected, box, chain, sourceFile, sourceLine, label, start, close }
+  return {
+    picking,
+    opened,
+    labOpen,
+    selected,
+    box,
+    chain,
+    sourceFile,
+    sourceLine,
+    label,
+    start,
+    close,
+  }
 }

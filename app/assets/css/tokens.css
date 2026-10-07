@@ -1,4 +1,5 @@
-:root, :host {
+:root,
+:host {
   --ve-bg: #090909;
   --ve-surface: #101010;
   --ve-raised: #191919;

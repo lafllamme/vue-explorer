@@ -1,5 +1,10 @@
 # Vue Explorer
 
+The development playground includes an interactive **Design Lab** with five
+real inspector layouts, a contextual file tree, source navigation and live
+density/split controls. See [Design Lab](docs/DESIGN-LAB.md). Code formatting is
+available through `pnpm format` and `pnpm format:check`.
+
 Vue/Nuxt development inspector inspired by [Feel](https://github.com/Nirbhay71/Feel-your-project). Independently implemented Vue adapter; the upstream React code is not copied.
 
 ## Planned full component explorer

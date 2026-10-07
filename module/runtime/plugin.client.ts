@@ -37,30 +37,49 @@ export default defineNuxtPlugin((nuxtApp) => {
       if (window.fetch === wrappedFetch) window.fetch = originalFetch
       if (globalThis.$fetch === wrappedDollarFetch) globalThis.$fetch = originalDollarFetch
       connection.client?.close?.()
-      app.unmount(); host.remove()
+      app.unmount()
+      host.remove()
     }
     void (async () => {
       try {
         const client = await connectDevframe({ baseURL: '/__vue_explorer/', callTimeout: 5000 })
-        if (disposed) { client.close?.(); return }
+        if (disposed) {
+          client.close?.()
+          return
+        }
         connection.client = client
         if (!client.isTrusted) {
           const response = await originalFetch('/__vue_explorer/__auth')
           if (!response.ok) throw new Error('Local Devframe authentication failed.')
           const { code } = await response.json()
-          if (!await client.requestTrustWithCode(code)) throw new Error('Devframe trust exchange failed.')
+          if (!(await client.requestTrustWithCode(code)))
+            throw new Error('Devframe trust exchange failed.')
         }
         const shared = await client.scope('vue-explorer').rpc.sharedState('state')
-        if (disposed) { client.close?.(); return }
+        if (disposed) {
+          client.close?.()
+          return
+        }
         connection.state.value = shared.value() as ExplorerState
-        shared.on('updated', value => { connection.state.value = value as ExplorerState })
-        connection.select = selection => shared.mutate(draft => { draft.selection = selection })
+        shared.on('updated', (value) => {
+          connection.state.value = value as ExplorerState
+        })
+        connection.select = (selection) =>
+          shared.mutate((draft) => {
+            draft.selection = selection
+          })
         connection.status.value = client.status
-        client.events.on('connection:status', status => { connection.status.value = status })
+        client.events.on('connection:status', (status) => {
+          connection.status.value = status
+        })
         wrappedFetch = async (input, init) => {
-          const url = new URL(input instanceof Request ? input.url : String(input), window.location.href)
+          const url = new URL(
+            input instanceof Request ? input.url : String(input),
+            window.location.href,
+          )
           // Capture only local API metadata; never retain bodies, headers or query strings.
-          if (url.origin !== window.location.origin || !url.pathname.startsWith('/api/')) return originalFetch(input, init)
+          if (url.origin !== window.location.origin || !url.pathname.startsWith('/api/'))
+            return originalFetch(input, init)
           const started = performance.now()
           let status = 0
           let handler: string | undefined
@@ -69,26 +88,43 @@ export default defineNuxtPlugin((nuxtApp) => {
             const response = await originalFetch(input, init)
             status = response.status
             const encodedHandler = response.headers.get('X-Vue-Explorer-Handler')
-            if (encodedHandler) { try { handler = decodeURIComponent(encodedHandler) } catch {} }
-            const timing = response.headers.get('Server-Timing')?.match(/vue-explorer;dur=([\d.]+)/)?.[1]
+            if (encodedHandler) {
+              try {
+                handler = decodeURIComponent(encodedHandler)
+              } catch {}
+            }
+            const timing = response.headers
+              .get('Server-Timing')
+              ?.match(/vue-explorer;dur=([\d.]+)/)?.[1]
             if (timing) serverDuration = Number(timing)
             return response
-          }
-          finally {
-            void client.call('vue-explorer:record-request', {
-              id: crypto.randomUUID(), path: url.pathname,
-              method: init?.method || (input instanceof Request ? input.method : 'GET'),
-              status, duration: performance.now() - started, timestamp: Date.now(), handler, serverDuration,
-            }).catch(() => {})
+          } finally {
+            void client
+              .call('vue-explorer:record-request', {
+                id: crypto.randomUUID(),
+                path: url.pathname,
+                method: init?.method || (input instanceof Request ? input.method : 'GET'),
+                status,
+                duration: performance.now() - started,
+                timestamp: Date.now(),
+                handler,
+                serverDuration,
+              })
+              .catch(() => {})
           }
         }
         window.fetch = wrappedFetch
         // Nitro's narrowed $fetch type omits ofetch's second global-options argument.
-        const createFetch = originalDollarFetch.create as unknown as (defaults: Record<string, never>, options: { fetch: typeof fetch }) => typeof originalDollarFetch
+        const createFetch = originalDollarFetch.create as unknown as (
+          defaults: Record<string, never>,
+          options: { fetch: typeof fetch },
+        ) => typeof originalDollarFetch
         wrappedDollarFetch = createFetch({}, { fetch: wrappedFetch })
         globalThis.$fetch = wrappedDollarFetch
+      } catch (error) {
+        if (!disposed)
+          connection.status.value = error instanceof Error ? error.message : 'Connection failed'
       }
-      catch (error) { if (!disposed) connection.status.value = error instanceof Error ? error.message : 'Connection failed' }
     })()
   })
   if (import.meta.hot) import.meta.hot.dispose(() => dispose?.())

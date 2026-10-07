@@ -1,1 +1,3 @@
-export default defineEventHandler(() => { throw createError({ statusCode: 503, statusMessage: 'Intentional playground failure' }) })
+export default defineEventHandler(() => {
+  throw createError({ statusCode: 503, statusMessage: 'Intentional playground failure' })
+})

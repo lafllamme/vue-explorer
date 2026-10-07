@@ -1,11 +1,53 @@
-:host { all: initial; color-scheme: dark; font-family: var(--ve-font-ui); color: var(--ve-ink); font-size: 13px; -webkit-font-smoothing: antialiased; }
-*, *::before, *::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: var(--ve-line); }
-button { font: inherit; }
-button { color: inherit; }
-h2, h3, p, pre { margin: 0; }
-button:disabled { opacity: .5; cursor: default; }
-.ve-drawer { width: min(460px, 100vw); height: 100dvh; }
-.ve-source-line { display: block; min-height: 20px; }
-.ve-source-active { background: #252525; color: white; }
-.ve-scroll { scrollbar-width: thin; scrollbar-color: #333 transparent; }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+:host {
+  all: initial;
+  color-scheme: dark;
+  font-family: var(--ve-font-ui);
+  color: var(--ve-ink);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: var(--ve-line);
+}
+button {
+  font: inherit;
+}
+button {
+  color: inherit;
+}
+h2,
+h3,
+p,
+pre {
+  margin: 0;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.ve-drawer {
+  width: min(460px, 100vw);
+  height: 100dvh;
+}
+.ve-source-line {
+  display: block;
+  min-height: 20px;
+}
+.ve-source-active {
+  background: #252525;
+  color: white;
+}
+.ve-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

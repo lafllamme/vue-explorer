@@ -1,23 +1,537 @@
-.ve-drawer { width: min(1300px, 88vw); }
-.ve-flow-section { border-bottom: 1px solid var(--ve-line); }
-.ve-graph-canvas { height: clamp(280px, 43vh, 480px); background: var(--ve-bg); }
-.ve-graph-node { display: flex; flex-direction: column; gap: 6px; text-align: left; width: 225px; min-height: 92px; padding: 12px; border: 1px solid var(--ve-line); border-radius: 6px; background: var(--ve-surface); color: var(--ve-ink); cursor: pointer; }
-.ve-graph-node strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 12px var(--ve-font-code); }
-.ve-graph-node .ve-code { font-size: 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ve-node-selected { border-color: var(--ve-ink) !important; background: var(--ve-raised); }
-.ve-graph-node:focus-visible, .ve-graph-row:focus-visible { outline: 2px solid white; outline-offset: 3px; }
-.ve-graph-list { max-height: 43vh; overflow: auto; padding: 16px; display: grid; gap: 8px; }
-.ve-graph-row { display: grid; text-align: left; gap: 6px; border: 1px solid var(--ve-line); padding: 12px; background: var(--ve-surface); border-radius: 6px; cursor: pointer; }
-.vue-flow__handle { background: #aaa; border: 0; width: 5px; height: 5px; }
-.vue-flow__attribution { display: none; }
-.vue-flow__edge-text { fill: var(--ve-muted); font-size: 10px; }
-.vue-flow__edge-textbg { fill: var(--ve-bg); }
-.ve-flow-code { max-height: 40vh; overflow: auto; }
-.ve-code-viewer { color: var(--ve-ink); background: var(--ve-bg); }
-.ve-code-viewer pre { position: relative; tab-size: 2; }
-.ve-line-number { display: inline-block; width: 36px; user-select: none; color: var(--ve-muted); }
-.ve-selected-header > div:first-child { min-width: 0; max-width: 100%; }
-.ve-node-details { gap: 12px; flex-wrap: wrap; }
-.ve-node-details > div { min-width: 0; overflow-wrap: anywhere; }
-.ve-node-details > button { flex-shrink: 0; white-space: nowrap; }
-@media (max-width: 640px) { .ve-drawer { width: 100vw; } .ve-selected-header { display: block; } .ve-selected-header > div:nth-child(2) { margin-top: 12px; margin-left: 0; } .ve-selected-header h2 { overflow-wrap: anywhere; } .ve-flow-section > div:first-child { flex-wrap: wrap; } .ve-graph-canvas { height: 35vh; } }
+.ve-drawer {
+  width: min(1440px, 94vw);
+}
+.ve-flow-section {
+  border-bottom: 1px solid var(--ve-line);
+}
+.ve-graph-canvas {
+  height: clamp(280px, 43vh, 480px);
+  background: var(--ve-bg);
+}
+.ve-graph-node {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  width: 225px;
+  min-height: 92px;
+  padding: 12px;
+  border: 1px solid var(--ve-line);
+  border-radius: 6px;
+  background: var(--ve-surface);
+  color: var(--ve-ink);
+  cursor: pointer;
+}
+.ve-graph-node strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 12px var(--ve-font-code);
+}
+.ve-graph-node .ve-code {
+  font-size: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ve-node-selected {
+  border-color: var(--ve-ink) !important;
+  background: var(--ve-raised);
+}
+.ve-graph-node:focus-visible,
+.ve-graph-row:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+.ve-graph-list {
+  max-height: 43vh;
+  overflow: auto;
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+.ve-graph-row {
+  display: grid;
+  text-align: left;
+  gap: 6px;
+  border: 1px solid var(--ve-line);
+  padding: 12px;
+  background: var(--ve-surface);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.vue-flow__handle {
+  background: #aaa;
+  border: 0;
+  width: 5px;
+  height: 5px;
+}
+.vue-flow__attribution {
+  display: none;
+}
+.vue-flow__edge-text {
+  fill: var(--ve-muted);
+  font-size: 10px;
+}
+.vue-flow__edge-textbg {
+  fill: var(--ve-bg);
+}
+.ve-flow-code {
+  max-height: 40vh;
+  overflow: auto;
+}
+.ve-code-viewer {
+  color: var(--ve-ink);
+  background: var(--ve-bg);
+}
+.ve-code-viewer pre {
+  position: relative;
+  tab-size: 2;
+}
+.ve-line-number {
+  display: inline-block;
+  width: 36px;
+  user-select: none;
+  color: var(--ve-muted);
+}
+.ve-selected-header > div:first-child {
+  min-width: 0;
+  max-width: 100%;
+}
+.ve-node-details {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ve-node-details > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ve-node-details > button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .ve-drawer {
+    width: 100vw;
+  }
+  .ve-selected-header {
+    display: block;
+  }
+  .ve-selected-header > div:nth-child(2) {
+    margin-top: 12px;
+    margin-left: 0;
+  }
+  .ve-selected-header h2 {
+    overflow-wrap: anywhere;
+  }
+  .ve-flow-section > div:first-child {
+    flex-wrap: wrap;
+  }
+  .ve-graph-canvas {
+    height: 35vh;
+  }
+}
+
+/* Shared identity: black surfaces, quiet borders, UI sans and code monospace.
+   The five lab approaches vary topology and priority, never the underlying data. */
+.ve-drawer > header {
+  padding: 8px 16px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+.ve-drawer .ve-button {
+  padding: calc(6px * var(--density, 1)) 10px;
+  min-height: 32px;
+  font-size: 12px;
+}
+.ve-drawer .ve-button[aria-pressed='true'] {
+  background: var(--ve-raised);
+  color: var(--ve-ink);
+}
+.ve-selected-header {
+  padding: 10px 16px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.ve-selected-header h2 {
+  font-size: 16px;
+}
+.ve-selected-header p {
+  margin-top: 4px;
+  font-size: 11px;
+}
+.ve-drawer > nav[aria-label='Inspector sections'] button {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.ve-drawer > footer {
+  padding: 8px 16px;
+  flex-shrink: 0;
+}
+.ve-lab-bar {
+  padding: 10px 16px;
+  background: var(--ve-surface);
+  border-bottom: 1px solid var(--ve-line);
+  flex-shrink: 0;
+}
+.ve-lab-heading {
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.ve-lab-heading span {
+  margin-left: 12px;
+  font-weight: 400;
+  color: var(--ve-muted);
+}
+.ve-lab-options {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.ve-lab-options button,
+.ve-ancestry button {
+  background: transparent;
+  color: var(--ve-muted);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 7px 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+.ve-lab-options button[aria-pressed='true'] {
+  border-color: var(--ve-line);
+  color: var(--ve-ink);
+  background: var(--ve-raised);
+}
+.ve-lab-options button:hover,
+.ve-ancestry button:hover {
+  color: var(--ve-ink);
+  background: var(--ve-raised);
+}
+.ve-lab-knobs {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.ve-lab-knobs label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ve-muted);
+}
+.ve-lab-knobs input {
+  width: 100px;
+  accent-color: var(--ve-ink);
+}
+.ve-lab-bar > p {
+  color: var(--ve-muted);
+  font-size: 11px;
+  margin-top: 8px;
+}
+.ve-ancestry {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 12px 6px;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.ve-ancestry > span {
+  color: var(--ve-muted);
+}
+.ve-ancestry button {
+  white-space: nowrap;
+}
+.ve-ancestry button[aria-current='page'] {
+  color: var(--ve-ink);
+  background: var(--ve-raised);
+}
+.ve-ancestry button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.ve-context-files {
+  border-top: 1px solid var(--ve-line);
+  border-bottom: 1px solid var(--ve-line);
+  position: relative;
+  flex-shrink: 0;
+}
+.ve-context-files summary,
+.ve-request-pane > summary {
+  padding: 9px 16px;
+  cursor: pointer;
+  color: var(--ve-muted);
+  font-size: 12px;
+}
+.ve-context-files summary > span {
+  margin-left: 12px;
+  font-family: var(--ve-font-code);
+  font-size: 11px;
+}
+.ve-file-picker {
+  padding: 8px 16px 12px;
+  background: var(--ve-surface);
+  max-height: 210px;
+  overflow: auto;
+}
+.ve-file-picker input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--ve-line);
+  border-radius: 4px;
+  background: var(--ve-bg);
+  color: var(--ve-ink);
+  font: inherit;
+  margin-bottom: 6px;
+}
+.ve-file-picker nav {
+  display: grid;
+}
+.ve-file-picker nav details summary {
+  padding: 8px 0;
+  font: 11px var(--ve-font-code);
+}
+.ve-file-picker nav details button {
+  display: block;
+  width: 100%;
+  padding-left: 20px;
+}
+.ve-file-picker input::placeholder {
+  color: var(--ve-muted);
+}
+.ve-file-picker button {
+  padding: 8px;
+  color: var(--ve-ink);
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  font: 11px var(--ve-font-code);
+  overflow-wrap: anywhere;
+}
+.ve-file-picker button span {
+  color: var(--ve-muted);
+}
+.ve-file-picker button strong {
+  font-weight: 500;
+}
+.ve-file-picker button:hover,
+.ve-file-picker button[aria-current='page'] {
+  background: var(--ve-raised);
+}
+.ve-inspector-content {
+  min-height: 0;
+}
+.ve-data-workspace {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(200px, var(--balance, 42%)) minmax(180px, 1fr) auto;
+}
+.ve-flow-section {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ve-flow-section > div:first-child {
+  padding: 8px 16px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.ve-flow-section .ve-label {
+  font-size: 10px;
+}
+.ve-flow-section > div:first-child .ve-code {
+  font-size: 10px;
+}
+.ve-graph-canvas {
+  height: auto;
+  min-height: 120px;
+  flex: 1;
+}
+.ve-graph-list {
+  max-height: none;
+  min-height: 0;
+}
+.ve-flow-section > p {
+  overflow: auto;
+  max-height: 48px;
+  flex-shrink: 0;
+}
+.ve-source-pane {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ve-node-details {
+  padding: 8px 16px;
+  flex-shrink: 0;
+}
+.ve-node-details p {
+  font-size: 11px;
+  margin-top: 3px;
+}
+.ve-code-viewer {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+.ve-code-viewer > div:first-child {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  flex-shrink: 0;
+}
+.ve-flow-code {
+  max-height: none;
+  min-height: 0;
+  flex: 1;
+  font-size: 12px;
+}
+.ve-request-pane {
+  min-height: 0;
+  max-height: 220px;
+  overflow: auto;
+  border-top: 1px solid var(--ve-line);
+}
+.ve-zoom {
+  display: flex;
+  align-items: center;
+  min-width: 38px;
+  justify-content: center;
+  font: 11px var(--ve-font-code);
+  color: var(--ve-muted);
+}
+.ve-drawer[data-design='split'] .ve-data-workspace {
+  grid-template-columns: minmax(0, var(--balance, 42%)) minmax(0, 1fr);
+  grid-template-rows: minmax(300px, 1fr) auto;
+}
+.ve-drawer[data-design='split'] .ve-source-pane {
+  border-left: 1px solid var(--ve-line);
+}
+.ve-drawer[data-design='split'] .ve-request-pane {
+  grid-column: 1 / -1;
+}
+.ve-drawer[data-design='workbench'] {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto auto minmax(0, 1fr) auto;
+}
+.ve-drawer[data-design='workbench'] > * {
+  grid-column: 1 / -1;
+}
+.ve-drawer[data-design='workbench'] .ve-context-files {
+  grid-column: 1;
+  grid-row: 5 / 7;
+  border-right: 1px solid var(--ve-line);
+  min-height: 0;
+  overflow: auto;
+}
+.ve-drawer[data-design='workbench'] .ve-file-picker {
+  max-height: none;
+  padding: 8px;
+}
+.ve-drawer[data-design='workbench'] > nav[aria-label='Inspector sections'],
+.ve-drawer[data-design='workbench'] .ve-inspector-content {
+  grid-column: 2;
+}
+.ve-drawer[data-design='code'] .ve-data-workspace {
+  grid-template-rows: minmax(150px, calc(var(--balance, 42%) * 0.6)) minmax(250px, 1fr) auto;
+}
+.ve-drawer .ve-selected-header,
+.ve-drawer .ve-node-details,
+.ve-drawer .ve-flow-section > div:first-child {
+  padding-top: calc(8px * var(--density, 1));
+  padding-bottom: calc(8px * var(--density, 1));
+}
+.ve-drawer .ve-file-picker button {
+  padding-top: calc(8px * var(--density, 1));
+  padding-bottom: calc(8px * var(--density, 1));
+}
+.ve-drawer[data-design='code'] .ve-flow-code {
+  font-size: 13px;
+  line-height: 22px;
+}
+.ve-drawer[data-design='trace'] .ve-data-workspace {
+  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-rows: minmax(200px, var(--balance, 42%)) minmax(180px, 1fr);
+}
+.ve-drawer[data-design='trace'] .ve-request-pane {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  max-height: none;
+  border-left: 1px solid var(--ve-line);
+}
+.ve-drawer[data-design='trace'] .ve-source-pane {
+  grid-column: 1;
+}
+.ve-drawer input:focus-visible,
+.ve-drawer summary:focus-visible,
+.ve-lab-options button:focus-visible,
+.ve-ancestry button:focus-visible,
+.ve-file-picker button:focus-visible {
+  outline: 2px solid var(--ve-ink);
+  outline-offset: -2px;
+}
+.ve-drawer ::selection {
+  background: var(--ve-ink);
+  color: var(--ve-bg);
+}
+@media (max-width: 800px) {
+  .ve-drawer,
+  .ve-drawer[data-design='workbench'] {
+    width: 100vw;
+    display: flex;
+  }
+  .ve-drawer[data-design] .ve-data-workspace {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+  .ve-drawer[data-design] .ve-flow-section {
+    height: 300px;
+    flex-shrink: 0;
+  }
+  .ve-drawer[data-design] .ve-source-pane {
+    min-height: 260px;
+    max-height: 400px;
+    flex-shrink: 0;
+    border-left: 0;
+  }
+  .ve-drawer[data-design] .ve-request-pane {
+    max-height: 220px;
+    flex-shrink: 0;
+    border-left: 0;
+  }
+  .ve-drawer[data-design='workbench'] .ve-context-files {
+    overflow: visible;
+  }
+  .ve-drawer[data-design='workbench'] .ve-file-picker {
+    max-height: 170px;
+  }
+  .ve-selected-header {
+    display: flex;
+  }
+  .ve-selected-header > div:nth-child(2) {
+    margin-top: 0;
+  }
+  .ve-lab-heading span {
+    display: none;
+  }
+  .ve-lab-knobs {
+    gap: 12px;
+  }
+  .ve-lab-knobs input {
+    width: 80px;
+  }
+  .ve-lab-options button {
+    min-height: 36px;
+  }
+}

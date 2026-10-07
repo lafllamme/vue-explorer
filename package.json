@@ -10,6 +10,8 @@
     "build": "nuxt build",
     "typecheck": "nuxt typecheck",
     "test": "node --import tsx --test tests/*.test.ts",
+    "format": "prettier --write app module/runtime server",
+    "format:check": "prettier --check app module/runtime server",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -26,6 +28,7 @@
     "elkjs": "0.11.0",
     "magic-string": "^0.30.21",
     "nitropack": "2.13.4",
+    "prettier": "^3.9.9",
     "shiki": "^4.5.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.3",
